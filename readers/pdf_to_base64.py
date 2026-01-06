@@ -22,5 +22,6 @@ def pdf_to_base64(path_pdf: str) -> str:
     image.save(buffer, format="JPEG")
 
     b64 = base64.b64encode(buffer.getvalue()).decode("utf-8")
+
     return b64
 
