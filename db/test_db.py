@@ -7,9 +7,9 @@ def test_connection():
     try:
         with engine.connect() as conn:
             conn.execute(text("SELECT 1"))
-            print("✅ Conexión exitosa a MariaDB")
+            print("✅ Conexión exitosa a PostgreSQL")
     except Exception as e:
-        print("❌ Error al conectar a MariaDB:")
+        print("❌ Error al conectar a PostgreSQL:")
         print(e)
 
 
