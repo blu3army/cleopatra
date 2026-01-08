@@ -4,6 +4,7 @@ from sqlalchemy import Column, Integer, String, ForeignKey, Enum
 
 class Party(Base):
     __tablename__ = "parties"
+
     id = Column(Integer, primary_key=True)
     cuit = Column(String, unique=True, nullable=False)
 

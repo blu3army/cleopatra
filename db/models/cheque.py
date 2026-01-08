@@ -17,20 +17,20 @@ class Cheque(Base):
 
     payment_date = Column(Date, default=default_tomorrow)
 
-    company_id = Column(Integer, ForeignKey('companies.id'))
-
-    payee_id = Column(Integer, ForeignKey('payees.id'))
-
-    issuing_bank_id = Column(Integer, ForeignKey('banks.id'))
-
-    status = Column(String(50), nullable=False, default='pending')
+    #issuing_bank_id = Column(Integer, ForeignKey('banks.id'))
 
     issue_date = Column(Date, default=datetime.date.today)
 
-    __table_args__ = (
-        UniqueConstraint('company_id', 'number', name='uq_cheques_company_id_number'),
-    )
+    direction = Column(String(3), nullable=False)
+
+    party = Column(String(50), nullable=False)
+
+    # __table_args__ = (
+    #     UniqueConstraint('company_id', 'number', name='uq_cheques_company_id_number'),
+    # )
 
 
 
+    def __repr__(self):
+        return f'Cheque {self.number}, {self.amount}, {self.payment_date}, {self.issue_date}, {self.direction}, {self.party}'
 
