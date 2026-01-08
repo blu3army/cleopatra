@@ -4,24 +4,26 @@ import typer
 
 from db.base import Base
 from db.engine import engine
-from db.models.cheque import Cheque
-from db.services.cheque_service import create_cheque, get_cheques
+from db.models.payment import Payment
+from db.services.payment_service import create_payment, get_payments
 from db.session import SessionLocal
 
 app = typer.Typer()
-cheque_app = typer.Typer()
-app.add_typer(cheque_app, name="cheque")
+payment_app = typer.Typer()
+app.add_typer(payment_app, name="payment")
 
 # Base.metadata.drop_all(engine)
 Base.metadata.create_all(engine)
 
-@cheque_app.command("add")
+@payment_app.command("add")
 def cheque_add(
         dir: str = typer.Option(..., "--dir"),
-        number: str = typer.Option(..., "--number"),
+        ref: str = typer.Option(..., "--ref"),
         amount: int = typer.Option(..., "--amount"),
         due: str = typer.Option(..., "--due", help="YYYY-MM-DD"),
         party: str = typer.Option(..., "--party"),
+        type: str = typer.Option(..., "--type"),
+
 ):
 
 
@@ -31,14 +33,20 @@ def cheque_add(
 
     try:
         with SessionLocal() as db:
-            new_cheque = create_cheque(db, {"dir": dir, "number": number, "amount": amount, "party": party, "due": due})
+            new_cheque = create_payment(db, {
+                "dir": dir, "ref": ref, "amount": amount, "party": party, "due": due, "type": type
+            })
 
     except Exception as err:
         db.rollback()
         raise err
 
 
-@cheque_app.command("ls")
+
+
+
+
+@payment_app.command("ls")
 def cheque_list(
         dir: str = typer.Option(..., "--dir"),
         since: str | None = typer.Option(None, "--from"),
@@ -50,7 +58,7 @@ def cheque_list(
 
     with SessionLocal() as db:
 
-        cheques = get_cheques(db, {
+        cheques = get_payments(db, {
             "dir": dir,
             "since": since,
             "until": until,

@@ -3,8 +3,8 @@ import os
 
 from db.base import Base
 from db.engine import engine
-from db.models.cheque import Cheque
-from db.services.cheque_service import create_cheque
+from db.models.payment import Cheque
+from db.services.payment_service import create_payment
 from db.session import SessionLocal
 from get_pdf_cheques import get_pdf_cheques
 from readers.excel_reader import read_cheques_from_excel
@@ -78,7 +78,7 @@ def process_excel_cheques(path_excel):
     # Simple insert con for
     for cheque in cheques_list:
         try:
-            cheque = create_cheque(db, data=cheque)
+            cheque = create_payment(db, data=cheque)
 
             print(f"Cheque saved: {cheque.number}")
 
@@ -88,7 +88,7 @@ def process_excel_cheques(path_excel):
 
 def create_simple_cheque(db):
     try:
-        cheque = create_cheque(db, data={
+        cheque = create_payment(db, data={
             "number": "32225180",
             "amount": 1500000,
             "drawer": "Karabin Elizabeth",
