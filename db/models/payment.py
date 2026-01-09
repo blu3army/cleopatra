@@ -39,7 +39,7 @@ class Payment(Base):
 
 
     def __repr__(self):
-        return f'Payment ID: {self.id} {self.reference} {self.amount} {self.payment_date} {self.payment_date} {self.status} {self.party} {self.direction}'
+        return f'Payment ID: {self.id} {self.reference} {self.amount} {self.payment_date} {self.issue_date} {self.status} {self.party} {self.direction}'
 
 
 

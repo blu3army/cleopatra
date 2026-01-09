@@ -6,7 +6,7 @@ from db.base import Base
 from db.engine import engine
 from db.models.payment import Payment
 from db.repositories.payment_repo import list_payments
-from db.services.payment_service import create_payment, delete_payment
+from db.services.payment_service import create_payment, delete_payment, update_payment
 from db.session import SessionLocal
 
 app = typer.Typer()
@@ -41,6 +41,29 @@ def payment_add_cmd(
         db.rollback()
         raise err
 
+
+@payment_app.command("edit")
+def payment_update_cmd(
+        id: int = typer.Option(..., "--id"),
+        amount: float = typer.Option(None, "--amount"),
+        due: str = typer.Option(None, "--due"),
+        ref: str = typer.Option(None, "--ref"),
+):
+
+    if amount is None and due is None and ref is None:
+        typer.echo("You must define --amount, --due or --ref")
+        raise typer.Exit()
+
+    with SessionLocal() as db:
+        updated_payment = update_payment(
+            db,
+            payment_id=id,
+            amount=amount,
+            due=due,
+            ref=ref,
+        )
+
+        typer.echo(updated_payment)
 
 @payment_app.command("rm")
 def payment_delete_cmd(

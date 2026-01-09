@@ -10,9 +10,6 @@ def create_payment(db: Session, data: dict) -> Payment:
     print("\nData for create cheque")
     print(data)
 
-    # Antes de crear el cheque, debemos obtener:
-    # party_id
-
 
     new_payment = Payment(
         reference=data.get("ref"),
@@ -29,6 +26,44 @@ def create_payment(db: Session, data: dict) -> Payment:
     db.refresh(new_payment)
 
     return new_payment
+
+
+
+def update_payment(
+        db: Session, payment_id: int, *,
+        ref: str = None,
+        amount: float = None,
+        due: str = None,
+        status: str = None
+) -> type[Payment]:
+
+    if all([v is None for v in [amount, due, status, ref]]):
+        raise Exception("All fields are None")
+
+    payment = db.get(Payment, payment_id)
+
+    if payment is None:
+        raise Exception("Payment with id {} not found".format(payment_id))
+
+    if payment.status != "PENDING":
+        raise Exception("Payment with id {} not PENDING".format(payment_id))
+
+    if ref is not None:
+        payment.reference = ref
+
+    if amount is not None:
+        payment.amount = amount
+
+    if due is not None:
+        payment.payment_date = due
+
+    if status is not None:
+        payment.status = status
+
+    db.commit()
+    db.refresh(payment)
+
+    return payment
 
 
 def delete_payment(db: Session, id: int) -> type[Payment] | None:

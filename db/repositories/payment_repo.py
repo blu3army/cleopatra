@@ -4,6 +4,7 @@ from db.models.payment import Payment
 
 
 def list_payments(db: Session, filters) -> list[type[Payment]]:
+    print(f"Listing Payments {filters}")
 
     query = db.query(Payment)
 
