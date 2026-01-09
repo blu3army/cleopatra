@@ -30,7 +30,7 @@ class Payment(Base):
     # 7
     party: Mapped[str] = mapped_column(String(50), nullable=False)
     # 8
-    status: Mapped[str] = mapped_column(String(50), default="pending")
+    status: Mapped[str] = mapped_column(String(50), default="PENDING")
 
     # __table_args__ = (
     #     UniqueConstraint('company_id', 'number', name='uq_cheques_company_id_number'),
@@ -39,7 +39,7 @@ class Payment(Base):
 
 
     def __repr__(self):
-        return f'Payment {self.reference} {self.payment_date} {self.payment_date} {self.status} {self.party} {self.direction}'
+        return f'Payment ID: {self.id} {self.reference} {self.amount} {self.payment_date} {self.payment_date} {self.status} {self.party} {self.direction}'
 
 
 

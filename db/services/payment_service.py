@@ -1,5 +1,6 @@
 from datetime import date
 
+from sqlalchemy import delete
 from sqlalchemy.orm import Session
 from db.models.payment import Payment
 
@@ -29,28 +30,20 @@ def create_payment(db: Session, data: dict) -> Payment:
 
     return new_payment
 
-def get_payments(db: Session, filters) -> list[Payment]:
 
-    query = db.query(Payment)
+def delete_payment(db: Session, id: int) -> type[Payment] | None:
 
-    if filters.get("dir"):
-        query = query.filter(Payment.direction == filters.get("dir"))
+    if id:
+        payment = db.get(Payment, id)
 
-    if filters.get("party"):
-        query = query.filter(Payment.party == filters.get("party"))
+        if payment.status != "PENDING":
+            return None
 
-    if filters.get("since"):
-        query = query.filter(Payment.payment_date >= filters.get("since"))
+        if payment:
+            db.delete(payment)
+            db.commit()
 
-    if filters.get("until"):
-        query = query.filter(Payment.payment_date <= filters.get("until"))
+            return payment
 
-    if filters.get("max_amount"):
-        query = query.filter(Payment.amount <= filters.get("max_amount"))
+    return None
 
-    if filters.get("min_amount"):
-        query = query.filter(Payment.amount >= filters.get("min_amount"))
-
-    payments = query.all()
-
-    return payments
